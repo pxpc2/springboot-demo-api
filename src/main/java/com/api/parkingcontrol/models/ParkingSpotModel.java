@@ -22,9 +22,13 @@ public class ParkingSpotModel implements Serializable
     private String spotNumber;
     @Column(nullable = false, unique = true, length = 7)
     private String carLicensePlate;
+    @Column(nullable = false)
     private String carModel;
+    @Column(nullable = false)
     private String driverName;
+    @Column(nullable = false)
     private String apartment;
+    @Column(nullable = false)
     private LocalDateTime checkinDate;
 
 
