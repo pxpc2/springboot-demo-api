@@ -30,6 +30,17 @@ public class ParkingSpotController
     public ResponseEntity<Object> addParkingSpot(
             @RequestBody @Valid final ParkingSpotDTO parkingSpotDTO)
     {
+
+        // verificações de condições (separar depois em um VALIDATOR)
+        if (parkingSpotService.existsByCarLicensePlate(parkingSpotDTO.getCarLicensePlate()))
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    "Conflito: Placa do carro já existe no estacionamento."
+            );
+        if (parkingSpotService.existsBySpotNumber(parkingSpotDTO.getSpotNumber()))
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    "Conflito: Vaga já em uso."
+            );
+
         final var parkingSpotModel = new ParkingSpotModel();
         BeanUtils.copyProperties(parkingSpotDTO, parkingSpotModel);
         parkingSpotModel.setCheckinDate(LocalDateTime.now(ZoneId.of("UTC")));

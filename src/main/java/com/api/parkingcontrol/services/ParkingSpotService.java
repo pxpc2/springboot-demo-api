@@ -24,4 +24,13 @@ public class ParkingSpotService
         return parkingSpotRepository.save(parkingSpotModel);
     }
 
+    public boolean existsByCarLicensePlate(final String licensePlate)
+    {
+        return parkingSpotRepository.existsByCarLicensePlate(licensePlate);
+    }
+
+    public boolean existsBySpotNumber(final String spotNumber)
+    {
+        return parkingSpotRepository.existsBySpotNumber(spotNumber);
+    }
 }

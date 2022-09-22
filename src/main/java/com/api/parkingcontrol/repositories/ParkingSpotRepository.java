@@ -11,6 +11,7 @@ public interface ParkingSpotRepository
         extends JpaRepository<ParkingSpotModel, UUID>
 {
 
-
+    public boolean existsByCarLicensePlate(final String licensePlate);
+    public boolean existsBySpotNumber(final String spotNumber);
 
 }
