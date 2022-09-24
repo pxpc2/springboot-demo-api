@@ -47,4 +47,9 @@ public class ParkingSpotService
         return parkingSpotRepository.findById(id);
     }
 
+    public void delete(final ParkingSpotModel parkingSpotModel)
+    {
+        parkingSpotRepository.delete(parkingSpotModel);
+    }
+
 }

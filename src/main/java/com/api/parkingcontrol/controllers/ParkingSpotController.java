@@ -59,14 +59,59 @@ public class ParkingSpotController
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getParkingSpotById(
-            @PathVariable(value = "id") final UUID id)
+    public ResponseEntity<Object> getParkingSpotById
+            (@PathVariable(value = "id") final UUID id)
     {
         final Optional<ParkingSpotModel> parkingSpotModelOptional
                 = parkingSpotService.findById(id);
         return parkingSpotModelOptional.<ResponseEntity<Object>>map(parkingSpotModel
                 -> ResponseEntity.status(HttpStatus.OK).body(parkingSpotModel)).orElseGet(()
                 -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vaga não encontrada."));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteParkingSpotById
+            (@PathVariable(value = "id") final UUID id)
+    {
+        final Optional<ParkingSpotModel> parkingSpotModelOptional
+                = parkingSpotService.findById(id);
+        if (parkingSpotModelOptional.isEmpty())
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    "Vaga não existente."
+            );
+        }
+        parkingSpotService.delete(parkingSpotModelOptional.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Vaga deletada com sucesso.");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateParkingSpot
+            (@PathVariable(value = "id") final UUID id,
+             @RequestBody @Valid final ParkingSpotDTO parkingSpotDTO)
+    {
+        final Optional<ParkingSpotModel> parkingSpotModelOptional
+                = parkingSpotService.findById(id);
+        if (parkingSpotModelOptional.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vaga não existente");
+
+        final var parkingSpotModel
+                = transferData(parkingSpotModelOptional.get(), parkingSpotDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                parkingSpotService.add(parkingSpotModel)
+        );
+    }
+
+    private ParkingSpotModel transferData(final ParkingSpotModel p,
+                                          final ParkingSpotDTO d)
+    {
+        p.setSpotNumber(d.getSpotNumber());
+        p.setCarModel(d.getCarModel());
+        p.setApartment(d.getApartment());
+        p.setDriverName(d.getDriverName());
+        p.setCarLicensePlate(d.getCarLicensePlate());
+        return p;
     }
 
 }
